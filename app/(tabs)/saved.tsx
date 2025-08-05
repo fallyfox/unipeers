@@ -1,9 +1,9 @@
 import { Text, View } from "react-native";
 
-export default function Index () {
+export default function Saved () {
   return (
     <View style={{flex:1,justifyContent:"center",alignItems:"center"}}>
-      <Text>Main home screen</Text>
+      <Text>Saved events screen</Text>
     </View>
   )
 }
