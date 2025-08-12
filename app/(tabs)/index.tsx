@@ -51,7 +51,7 @@ export default function Index () {
                       color="black" />
                       <Text>{item.createdBy.length > 24 ? `${item.createdBy.slice(0,24)}...` : item.createdBy}</Text>
                     </View>
-                    <Link href="/profile" className="p-3 font-bold text-white bg-teal-800 rounded-md">
+                    <Link href={`/event-details/${item.id}`} className="p-3 font-bold text-white bg-teal-800 rounded-md">
                       <Text>Event details</Text>
                     </Link>
                   </View>

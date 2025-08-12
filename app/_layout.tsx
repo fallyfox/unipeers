@@ -25,9 +25,9 @@ export default function RootLayout() {
       }}/>
       
       <Stack.Screen
-      name="event-details"
+      name="event-details/[id]"
       options={{
-        headerShown:false,
+        headerShown:true,
         title:"Event details"
       }}/>
     </Stack>
