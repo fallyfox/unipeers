@@ -55,7 +55,7 @@ export default function EventDetails () {
                             <EventSnippet 
                             mainTitle={data.time} 
                             subTitle={data.date} 
-                            iconName="event-note"/>
+                            iconName="newspaper"/>
 
                             <EventSnippet 
                             mainTitle={data.title} 
@@ -70,7 +70,7 @@ export default function EventDetails () {
                             <EventSnippet 
                             mainTitle={data.venue} 
                             subTitle={data.school}
-                            iconName="event-note"/>
+                            iconName="map"/>
 
                             {/* description block */}
                             <View>
