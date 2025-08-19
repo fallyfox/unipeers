@@ -14,5 +14,5 @@
     ".expo/types/**/*.ts",
     "expo-env.d.ts",
     "nativewind-env.d.ts"
-, "app/(tabs)/create.jsx"  ]
+, "app/(tabs)/create.jsx", "utils/format-date.utils.js"  ]
 }
