@@ -55,3 +55,9 @@ Open metro.config.js files and correctly update "./global.css" to "./app/globals
 
 Recommended: after lots of setup restart development server with --clear flag
 npx expo start --clear
+
+### How set up a data picker
+
+
+### How to set up a select picker
+npm install react-native-picker-select
