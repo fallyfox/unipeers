@@ -1,18 +1,37 @@
-import MaterialIcons from '@expo/vector-icons/MaterialIcons';
-import { Text, View } from "react-native";
-import { themeColors } from "../utils/theme.utils";
+import { useFonts } from "expo-font";
+import { Dimensions, Image, StyleSheet, View } from "react-native";
 
-export function EventSnippet ({ mainTitle,subTitle,iconName }) {
-    return (
-        <View className="w-full flex flex-row gap-x-8">
-            <MaterialIcons 
-            name={iconName} 
-            size={36}
-            style={{color: themeColors.darkGreen}} />
-            <View>
-                <Text style={{color: themeColors.darkGreen,fontWeight: "bold"}}>{mainTitle}</Text>
-                <Text>{subTitle}</Text>
-            </View>
-        </View>
-    )
+// calculate screen width
+const screenWidth = Dimensions.get("window").width;
+
+export function EventSnippet ({ data }) {
+  const [fontsLoaded] = useFonts({
+    "Raleway-Bold": require("../assets/fonts/Raleway-Bold.ttf"),
+    "Raleway-Regular": require("../assets/fonts/Raleway-Regular.ttf")
+  });
+
+  if (!fontsLoaded) {
+    return null
+  }
+
+  return (
+    <View>
+        <Image 
+        style={{
+          width: screenWidth,
+          height: 400,
+          resizeMode: "cover"
+        }}
+        source={{ uri: data.bannerUrl }}
+        alt="event photo"
+        />
+    </View>
+  )
 }
+
+const styles = StyleSheet.create({
+  text: {
+    fontSize: 14,
+    fontFamily: "Raleway-Regular",
+  }
+})

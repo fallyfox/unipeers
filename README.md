@@ -58,6 +58,13 @@ npx expo start --clear
 
 ### How set up a data picker
 
-
 ### How to set up a select picker
 npm install react-native-picker-select
+
+### Setting up a custom font
+Using useFont
+
+### Setting up a styled component
+https://styled-components.com/docs/basics#react-native
+
+### React Native Firebase

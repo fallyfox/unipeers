@@ -7,6 +7,13 @@ import { useEffect, useState } from "react";
 import { Platform, ScrollView, StatusBar, StyleSheet, Text, TextInput, TouchableOpacity, View } from "react-native";
 import RNPickerSelect from 'react-native-picker-select';
 
+const options = [
+    {
+        label: "Lagos",
+        value: "lagos"
+    }
+]
+
 export default function Create () {
     const [title,setTitle] = useState("");
     const [description,setDescription] = useState("");
