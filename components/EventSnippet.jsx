@@ -30,7 +30,7 @@ export function EventSnippet ({ data }) {
           height: 400,
           resizeMode: "cover"
         }}
-        source={{ uri: data.bannerUrl }}
+        source={{ uri: data.imgUrl }} 
         alt="event photo"
         />
 
@@ -54,7 +54,7 @@ export function EventSnippet ({ data }) {
 
           {/* right of interractions */}
           <View className="flex flex-row items-center gap-x-3">
-            <Span>N20,000</Span>
+            <Span>{data.fee == 0 ? "Free" : "₦" + new Intl.NumberFormat().format(data.fee)}</Span>
             <Link href={`/event-details/[${data.id}]`}>
               <Feather name="arrow-up-right" size={24} color="black"/>
             </Link>
