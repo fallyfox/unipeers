@@ -33,7 +33,7 @@ export default function Index () {
         <SafeAreaView style={{ flex: 1 }}>
           <FlatList
           data={events}
-          ItemSeparatorComponent={() => (<Seperator h={32}/>)}
+          ItemSeparatorComponent={() => (<Seperator h={32} w={0}/>)}
           renderItem={({item}) => {
             return (
               <EventSnippet data={item.data}/>

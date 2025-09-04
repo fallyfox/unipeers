@@ -1,7 +1,7 @@
 import { View } from "react-native";
 
-export function Seperator ({h}) {
+export function Seperator ({ h,w }) {
   return (
-    <View style={{height:h, backgroundColor:"transparent"}}></View>
+    <View style={{height:h, width:w, backgroundColor:"transparent"}}></View>
   )
 }
