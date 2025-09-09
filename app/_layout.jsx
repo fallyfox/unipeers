@@ -2,13 +2,32 @@ import { Stack } from "expo-router";
 import "./globals.css";
 
 export default function RootLayout() {
+  const user = undefined;
+
   return (
     <Stack>
+      {user !== undefined ?
       <Stack.Screen
       name="(tabs)"
       options={{
         headerShown:false,
       }}/>
+      :
+      <Stack.Screen
+      name="signup"
+      options={{
+        headerShown:false,
+        title:"Sign up"
+      }}/>
+      }
+      
+      <Stack.Screen
+      name="signin"
+      options={{
+        headerShown:false,
+        title:"Sign in"
+      }}/>
+      
       
       <Stack.Screen
       name="index"
@@ -37,6 +56,7 @@ export default function RootLayout() {
         headerShown:true,
         title:"Update event"
       }}/>
+      
     </Stack>
   )
 }
