@@ -30,6 +30,13 @@ export default function RootLayout() {
         headerShown:true,
         title:"Event details"
       }}/>
+      
+      <Stack.Screen
+      name="update-event/[uid]"
+      options={{
+        headerShown:true,
+        title:"Update event"
+      }}/>
     </Stack>
   )
 }

@@ -4,7 +4,7 @@ import { db } from "@/config/firebase.config";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import { Link } from "expo-router";
-import { collection, getDocs, query, where } from "firebase/firestore";
+import { collection, onSnapshot, query, where } from "firebase/firestore";
 import { useEffect, useState } from "react";
 import { Dimensions, FlatList, Image, Pressable, Text, View } from "react-native";
 import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
@@ -25,13 +25,13 @@ export default function Profile () {
         where("createdBy","==",user)
       );
 
-      const onSnap = await getDocs(q);
-      onSnap.docs.forEach(doc => reData.push({
-        id: doc.id,
-        data: doc.data()
-      }));
-
-      setUserEvents(reData);
+      onSnapshot(q, (onSnap) => {
+        onSnap.docs.forEach((doc) => reData.push({
+          id: doc.id,
+          data: doc.data()
+        }));
+        setUserEvents(reData);
+      });
     }
 
     // call and execute function
