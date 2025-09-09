@@ -1,12 +1,13 @@
 // Import the functions you need from the SDKs you need
 import { getApp, getApps, initializeApp } from "firebase/app";
+import { getAuth } from "firebase/auth";
 import { getFirestore } from "firebase/firestore";
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
 
 // Your web app's Firebase configuration
 const firebaseConfig = {
-  apiKey: process.env.FIREBASE_API_KEY,
+  apiKey: "AIzaSyBczNhigR4I4W-ZweRpeBeJ_CSj4oa3wqw",
   authDomain: "unipeers-e4d07.firebaseapp.com",
   projectId: "unipeers-e4d07",
   storageBucket: "unipeers-e4d07.firebasestorage.app",
@@ -17,6 +18,7 @@ const firebaseConfig = {
 // Initialize Firebase
 const app = getApps.length == 0 ? initializeApp(firebaseConfig) : getApp();
 const db = getFirestore(app);
+const auth = getAuth(app);
 
-export { db };
+export { auth, db };
 

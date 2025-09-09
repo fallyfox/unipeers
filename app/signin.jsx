@@ -1,14 +1,40 @@
 import { Link } from "expo-router";
-import { Image, StatusBar, StyleSheet, Text, TextInput, TouchableOpacity, View } from "react-native";
+import { signInWithEmailAndPassword } from "firebase/auth";
+import { useState } from "react";
+import { ActivityIndicator, Alert, Image, StatusBar, StyleSheet, Text, TextInput, TouchableOpacity, View } from "react-native";
+import { auth } from "../config/firebase.config";
 import { themeColors } from "../utils/theme.utils";
 
 export default function Signin () {
+    const [email,setEmail] = useState(""); 
+    const [password,setPassword] = useState(""); 
+    const [isLoading,setIsLoading] = useState(false);
+
+    const handleSignIn = async () => {
+        setIsLoading(true);
+
+        try {
+            const currentUser = await signInWithEmailAndPassword(auth,email,password);
+            setIsLoading(false);
+            console.log(">>>>from signin >>>>",currentUser);
+        } catch (error) {
+            Alert.alert(
+                "Message",
+                "An error was encountered. Try again",
+                [{ text: "Dismiss" }]
+            );
+            setIsLoading(false);
+            console.log("Error",error);
+        }
+    }
+
     return (
         <View style={styles.wrapper}>
+            {/* <StatusBar translucent={false} barStyle="light-content"/> */}
             {/* header group */}
             <View style={styles.header}>
-                <Text style={styles.brandName}>Copreneur</Text>
-                <Text style={styles.brandDesc}>Where entrepreneurs collaborate with developers</Text>
+                <Text style={styles.brandName}>Unipeers</Text>
+                <Text style={styles.brandDesc}>Where friends meets friends</Text>
             </View>
 
             {/* body group */}
@@ -38,11 +64,23 @@ export default function Signin () {
                     <TextInput
                     keyboardType="email-address"
                     style={styles.input}
-                    placeholder="eg. johndoe@example.com"/>
+                    placeholder="eg. johndoe@example.com"
+                    value={email}
+                    onChangeText={(text) => setEmail(text)}/>
+                    
                     <TextInput
+                    secureTextEntry={true}
                     keyboardType="default"
                     style={styles.input}
-                    placeholder="create password"/>
+                    placeholder="create password"
+                    value={password}
+                    onChangeText={(text) => setPassword(text)}/>
+
+                    {password.length && email.length &&
+                    <TouchableOpacity onPress={handleSignIn} style={styles.signInBtn}>
+                        {isLoading ? <ActivityIndicator size="large" color="white"/> :
+                        <Text style={styles.signInText}>Sign in</Text>}
+                    </TouchableOpacity>}
                 </View>
 
                 {/* already have an account? */}
@@ -54,8 +92,12 @@ export default function Signin () {
 
             {/* bottom group */}
             <View style={styles.footer}>
-                <Link href="/about" style={styles.footerLink}>About copreneur</Link>
-                <Link href="/about" style={styles.footerLink}>Home</Link>
+                <Link href="/about" style={styles.footerLink}>
+                    <Text>About Unipeers</Text>
+                </Link>
+                <Link href="/about" style={styles.footerLink}>
+                    <Text>Home</Text>
+                </Link>
             </View>
         </View>
     )
@@ -104,7 +146,7 @@ const styles = StyleSheet.create({
     color: themeColors.gray300
    },
    alreadyLink: {
-    color: themeColors.gray100,
+    color: themeColors.gray300,
     fontWeight: "bold"
    },
    signInBtn: {
@@ -114,7 +156,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     gap: 16,
-    backgroundColor: themeColors.gray300,
+    backgroundColor: themeColors.darkGray,
     borderRadius: 4
    },
    signInText: {
@@ -143,7 +185,7 @@ const styles = StyleSheet.create({
    line: {
     width: "30%",
     borderTopWidth: 1,
-    borderTopColor: themeColors.gray300
+    borderTopColor: themeColors.darkGray
    },
    emailSec: {
     gap: 8

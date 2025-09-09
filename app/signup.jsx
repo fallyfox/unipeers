@@ -1,20 +1,46 @@
 import { Link } from "expo-router";
+import { createUserWithEmailAndPassword } from "firebase/auth";
 import { useState } from "react";
-import { Image, StatusBar, StyleSheet, Text, TextInput, TouchableOpacity, View } from "react-native";
+import { ActivityIndicator, Alert, Image, StatusBar, StyleSheet, Text, TextInput, TouchableOpacity, View } from "react-native";
+import { auth } from "../config/firebase.config";
 import { themeColors } from "../utils/theme.utils";
 
 export default function Signup () {
     const [email,setEmail] = useState(""); 
     const [password,setPassword] = useState(""); 
     const [passwordConfirmation,setPasswordConfirmation] = useState(""); 
+    const [isLoading,setIsLoading] = useState(false);
+
+    const handleSignUp = async () => {
+        setIsLoading(true);
+
+        try {
+            const currentUser = await createUserWithEmailAndPassword(auth,email,password);
+            setIsLoading(false);
+            Alert.alert(
+                "Message",
+                "You account was created",
+                [{ text: "Okay" }]
+            );
+            //console.log(">>>>new user>>>>",currentUser);
+        } catch (error) {
+            Alert.alert(
+                "Message",
+                "An error was encountered. Try again",
+                [{ text: "Dismiss" }]
+            );
+            setIsLoading(false);
+            console.log("Error",error);
+        }
+    }
 
     return (
         <View style={styles.wrapper}>
             {/* <StatusBar translucent={false} barStyle="light-content"/> */}
             {/* header group */}
             <View style={styles.header}>
-                <Text style={styles.brandName}>Copreneur</Text>
-                <Text style={styles.brandDesc}>Where entrepreneurs collaborate with developers</Text>
+                <Text style={styles.brandName}>Unipeers</Text>
+                <Text style={styles.brandDesc}>Where friends meets friends</Text>
             </View>
 
             {/* body group */}
@@ -66,8 +92,9 @@ export default function Signup () {
                     onChangeText={(text) => setPasswordConfirmation(text)}/>}
 
                     {password.length >= 8 && password == passwordConfirmation &&
-                    <TouchableOpacity style={styles.signInBtn}>
-                        <Text style={styles.signInText}>Create Account</Text>
+                    <TouchableOpacity onPress={handleSignUp} style={styles.signInBtn}>
+                        {isLoading ? <ActivityIndicator size="large" color="white"/> :
+                        <Text style={styles.signInText}>Create Account</Text>}
                     </TouchableOpacity>}
                 </View>
 
@@ -140,7 +167,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     gap: 16,
-    backgroundColor: themeColors.gray300,
+    backgroundColor: themeColors.darkGray,
     borderRadius: 4
    },
    signInText: {
@@ -169,7 +196,7 @@ const styles = StyleSheet.create({
    line: {
     width: "30%",
     borderTopWidth: 1,
-    borderTopColor: themeColors.gray100
+    borderTopColor: themeColors.darkGray
    },
    emailSec: {
     gap: 8
