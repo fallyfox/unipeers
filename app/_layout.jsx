@@ -4,13 +4,13 @@ import { AuthContext, AuthProvider } from "../config/context.config";
 import "./globals.css";
 
 export default function RootLayout() {
-  // perform the codes below on the context.config file
   const { currentUser } = useContext(AuthContext);
-  console.log("??? from context",currentUser)
-
+  
   return (
     <AuthProvider>
-      <Stack>
+      <Stack screenOptions={{
+        headerShown: false
+      }}>
         {currentUser !== undefined ?
         <Stack.Screen
         name="(tabs)"

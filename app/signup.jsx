@@ -1,28 +1,45 @@
-import { Link } from "expo-router";
+import { Link, useRouter } from "expo-router";
 import { createUserWithEmailAndPassword } from "firebase/auth";
+import { addDoc, collection } from "firebase/firestore";
 import { useState } from "react";
-import { ActivityIndicator, Alert, Image, StatusBar, StyleSheet, Text, TextInput, TouchableOpacity, View } from "react-native";
-import { auth } from "../config/firebase.config";
+import { ActivityIndicator, Alert, Image, KeyboardAvoidingView, Platform, ScrollView, StatusBar, StyleSheet, Text, TextInput, TouchableOpacity, View } from "react-native";
+import { auth, db } from "../config/firebase.config";
 import { themeColors } from "../utils/theme.utils";
 
 export default function Signup () {
     const [email,setEmail] = useState(""); 
     const [password,setPassword] = useState(""); 
     const [passwordConfirmation,setPasswordConfirmation] = useState(""); 
+    const [firstName,setFirstName] = useState(""); 
+    const [lastName,setLastName] = useState(""); 
     const [isLoading,setIsLoading] = useState(false);
+
+    const router = useRouter();
 
     const handleSignUp = async () => {
         setIsLoading(true);
 
         try {
             const currentUser = await createUserWithEmailAndPassword(auth,email,password);
+
+            // create new user records on firestore
+            const doc = await addDoc(collection(db,"users"),{
+                email: email,
+                uid: currentUser.user.uid,
+                firstName: firstName,
+                lastName: lastName,
+                createAt: new Date().getTime()
+            });
+
+            if (doc.id) {
+                Alert.alert(
+                    "Message",
+                    "You account was created",
+                    [{ text: "Okay" },{text: "Go to Home",onPress: () => router.replace("/(tabs)")}]
+                );   
+            }
+
             setIsLoading(false);
-            Alert.alert(
-                "Message",
-                "You account was created",
-                [{ text: "Okay" }]
-            );
-            //console.log(">>>>new user>>>>",currentUser);
         } catch (error) {
             Alert.alert(
                 "Message",
@@ -35,82 +52,109 @@ export default function Signup () {
     }
 
     return (
-        <View style={styles.wrapper}>
-            {/* <StatusBar translucent={false} barStyle="light-content"/> */}
-            {/* header group */}
-            <View style={styles.header}>
-                <Text style={styles.brandName}>Unipeers</Text>
-                <Text style={styles.brandDesc}>Where friends meets friends</Text>
-            </View>
+        <KeyboardAvoidingView
+            style={styles.wrapper}
+            behavior="padding"
+            keyboardVerticalOffset={Platform.select({
+                ios: 0,
+                android: -StatusBar.currentHeight,
+            })}>
 
-            {/* body group */}
-            <View style={styles.body}>
-                <Text style={styles.bodyText}>Create account</Text>
+            <ScrollView
+                contentContainerStyle={styles.ScrollViewContainer}
+                showsVerticalScrollIndicator={false}>
+                <View style={styles.wrapper}>
+                    {/* <StatusBar translucent={false} barStyle="light-content"/> */}
+                    {/* header group */}
+                    <View style={styles.header}>
+                        <Text style={styles.brandName}>Unipeers</Text>
+                        <Text style={styles.brandDesc}>Where friends meets friends</Text>
+                    </View>
 
-                {/* create account with google */}
-                <TouchableOpacity style={styles.signInBtn}>
-                    <Image
-                    style={{
-                        width: 36,
-                        height: 36,
-                    }}
-                    source={require("../assets/images/google.png")}/>
-                    <Text style={styles.signInText}>Google</Text>
-                </TouchableOpacity>
+                    {/* body group */}
+                    <View style={styles.body}>
+                        <Text style={styles.bodyText}>Create account</Text>
 
-                {/* OR */}
-                <View style={styles.orSec}>
-                    <View style={styles.line}></View>
-                    <Text style={styles.orText}>OR</Text>
-                    <View style={styles.line}></View>
+                        {/* create account with google */}
+                        <TouchableOpacity style={styles.signInBtn}>
+                            <Image
+                            style={{
+                                width: 36,
+                                height: 36,
+                            }}
+                            source={require("../assets/images/google.png")}/>
+                            <Text style={styles.signInText}>Google</Text>
+                        </TouchableOpacity>
+
+                        {/* OR */}
+                        <View style={styles.orSec}>
+                            <View style={styles.line}></View>
+                            <Text style={styles.orText}>OR</Text>
+                            <View style={styles.line}></View>
+                        </View>
+
+                        {/* create account with email and password */}
+                        <View style={styles.emailSec}>
+                            <TextInput
+                            keyboardType="email-address"
+                            style={styles.input}
+                            placeholder="eg. johndoe@example.com"
+                            value={email}
+                            onChangeText={(text) => setEmail(text)}/>
+                            
+                            <TextInput
+                            secureTextEntry={true}
+                            keyboardType="default"
+                            style={styles.input}
+                            placeholder="create password"
+                            value={password}
+                            onChangeText={(text) => setPassword(text)}/>
+                            
+                            {password.length >= 8 &&
+                            <TextInput
+                            secureTextEntry={true}
+                            keyboardType="default"
+                            style={styles.input}
+                            placeholder="confirm password"
+                            value={passwordConfirmation}
+                            onChangeText={(text) => setPasswordConfirmation(text)}/>}
+
+                            <TextInput
+                            keyboardType="default"
+                            style={styles.input}
+                            placeholder="first name"
+                            value={firstName}
+                            onChangeText={(text) => setFirstName(text)}/>
+                            
+                            <TextInput
+                            keyboardType="default"
+                            style={styles.input}
+                            placeholder="last name"
+                            value={lastName}
+                            onChangeText={(text) => setLastName(text)}/>
+
+                            {password.length >= 8 && password == passwordConfirmation &&
+                            <TouchableOpacity onPress={handleSignUp} style={styles.signInBtn}>
+                                {isLoading ? <ActivityIndicator size="large" color="white"/> :
+                                <Text style={styles.signInText}>Create Account</Text>}
+                            </TouchableOpacity>}
+                        </View>
+
+                        {/* already have an account? */}
+                        <View style={styles.already}>
+                            <Text style={styles.alreadyText}>Already have an account?</Text>
+                            <Link href="/signin" style={styles.alreadyLink}>Go to sign in</Link>
+                        </View>
+                    </View>
+
+                    {/* bottom group */}
+                    <View style={styles.footer}>
+                        <Link href="/about" style={styles.footerLink}>About copreneur</Link>
+                        <Link href="/about" style={styles.footerLink}>Home</Link>
+                    </View>
                 </View>
-
-                {/* create account with email and password */}
-                <View style={styles.emailSec}>
-                    <TextInput
-                    keyboardType="email-address"
-                    style={styles.input}
-                    placeholder="eg. johndoe@example.com"
-                    value={email}
-                    onChangeText={(text) => setEmail(text)}/>
-                    
-                    <TextInput
-                    secureTextEntry={true}
-                    keyboardType="default"
-                    style={styles.input}
-                    placeholder="create password"
-                    value={password}
-                    onChangeText={(text) => setPassword(text)}/>
-                    
-                    {password.length >= 8 &&
-                    <TextInput
-                    secureTextEntry={true}
-                    keyboardType="default"
-                    style={styles.input}
-                    placeholder="confirm password"
-                    value={passwordConfirmation}
-                    onChangeText={(text) => setPasswordConfirmation(text)}/>}
-
-                    {password.length >= 8 && password == passwordConfirmation &&
-                    <TouchableOpacity onPress={handleSignUp} style={styles.signInBtn}>
-                        {isLoading ? <ActivityIndicator size="large" color="white"/> :
-                        <Text style={styles.signInText}>Create Account</Text>}
-                    </TouchableOpacity>}
-                </View>
-
-                {/* already have an account? */}
-                <View style={styles.already}>
-                    <Text style={styles.alreadyText}>Already have an account?</Text>
-                    <Link href="/signin" style={styles.alreadyLink}>Go to sign in</Link>
-                </View>
-            </View>
-
-            {/* bottom group */}
-            <View style={styles.footer}>
-                <Link href="/about" style={styles.footerLink}>About copreneur</Link>
-                <Link href="/about" style={styles.footerLink}>Home</Link>
-            </View>
-        </View>
+            </ScrollView>
+        </KeyboardAvoidingView>
     )
 }
 
@@ -123,6 +167,11 @@ const styles = StyleSheet.create({
     paddingTop: StatusBar.currentHeight,
     paddingBottom: 40
    }, 
+   ScrollViewContainer: {
+        flexGrow: 1,
+        justifyContent: "space-between",
+        marginBottom: 40,
+    },
    header: {
     display: "flex",
     flexDirection: "column",

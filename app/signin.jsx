@@ -1,4 +1,4 @@
-import { Link } from "expo-router";
+import { Link, useRouter } from "expo-router";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { useState } from "react";
 import { ActivityIndicator, Alert, Image, StatusBar, StyleSheet, Text, TextInput, TouchableOpacity, View } from "react-native";
@@ -10,13 +10,15 @@ export default function Signin () {
     const [password,setPassword] = useState(""); 
     const [isLoading,setIsLoading] = useState(false);
 
+    const router = useRouter();
+
     const handleSignIn = async () => {
         setIsLoading(true);
 
         try {
-            const currentUser = await signInWithEmailAndPassword(auth,email,password);
+            await signInWithEmailAndPassword(auth,email,password);
             setIsLoading(false);
-            console.log(">>>>from signin >>>>",currentUser);
+            router.replace("/(tabs)");
         } catch (error) {
             Alert.alert(
                 "Message",
@@ -75,18 +77,19 @@ export default function Signin () {
                     placeholder="create password"
                     value={password}
                     onChangeText={(text) => setPassword(text)}/>
-
-                    {password.length && email.length &&
+                    
                     <TouchableOpacity onPress={handleSignIn} style={styles.signInBtn}>
                         {isLoading ? <ActivityIndicator size="large" color="white"/> :
                         <Text style={styles.signInText}>Sign in</Text>}
-                    </TouchableOpacity>}
+                    </TouchableOpacity>
                 </View>
 
                 {/* already have an account? */}
                 <View style={styles.already}>
                     <Text style={styles.alreadyText}>Don't have an account?</Text>
-                    <Link href="/signup" style={styles.alreadyLink}>Go to sign up</Link>
+                    <Link href="/signup" style={styles.alreadyLink}>
+                        <Text>Go to sign up</Text>
+                    </Link>
                 </View>
             </View>
 
