@@ -1,13 +1,16 @@
 import { howToCreateEvent } from "@/assets/local-data/how-to-create-event";
 import { schools } from "@/assets/local-data/school-list";
+import { AuthContext } from "@/config/context.config";
 import { db } from "@/config/firebase.config";
 import { themeColors } from "@/utils/theme.utils";
+import { useRouter } from "expo-router";
 import { addDoc, collection } from "firebase/firestore";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { ActivityIndicator, Alert, Platform, ScrollView, StatusBar, StyleSheet, Text, TextInput, TouchableOpacity, View } from "react-native";
 import RNPickerSelect from 'react-native-picker-select';
 
 export default function Create () {
+    const { currentUser } = useContext(AuthContext);
     const [title,setTitle] = useState("");
     const [description,setDescription] = useState("");
     const [venue,setVenue] = useState("");
@@ -19,6 +22,8 @@ export default function Create () {
     const [showPicker,setShowPicker] = useState(false);
     const [loading,setLoading] = useState(false);
 
+    const router = useRouter();
+
     const handleCreateEvent = async () => {
         setLoading(true);
         try {
@@ -28,7 +33,7 @@ export default function Create () {
                 venue: venue,
                 school: selectedSchool,
                 date: "",
-                createdBy: "anonymous",
+                createdBy: currentUser.uid,
                 createdAt: new Date().getTime(),
                 imgUrl: imageUrl,
                 fee: fee
@@ -42,7 +47,7 @@ export default function Create () {
                     { text: "Okay"},
                     { 
                         text: "Return to feeds",
-                        onPress: () => console.log("to be impremented")
+                        onPress: () => router.replace("/(tabs)")
                     }
                 ]
             )
@@ -160,7 +165,8 @@ export default function Create () {
                     onPress={
                         title.length > 6 && 
                         description.length > 3 && 
-                        imageUrl.length > 8 
+                        imageUrl.length > 8 &&
+                        currentUser
                         ? handleCreateEvent : () => {}
                     }
                     style={styles.submitBtn}>

@@ -2,7 +2,7 @@ import { EventSnippet } from "@/components/EventSnippet";
 import { Seperator } from "@/components/ListSeperator";
 import { db } from "@/config/firebase.config";
 import { themeColors } from "@/utils/theme.utils";
-import { collection, getDocs } from "firebase/firestore";
+import { collection, onSnapshot } from "firebase/firestore";
 import { useEffect, useState } from "react";
 import { ActivityIndicator, FlatList, StyleSheet } from "react-native";
 import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
@@ -12,16 +12,18 @@ export default function Index () {
 
   // fetch events from database
   useEffect(() => {
-    const handleFetchData = async () => {
-      const receivedData = [];
-      const onSnap = await getDocs(collection(db,"events"));
+    const handleFetchData = () => {
+      const q = collection(db,"events");
 
-      onSnap.docs.forEach(doc => receivedData.push({
-        id: doc.id,
-        data: doc.data()
-      }));
+      onSnapshot(q,(querySnapShot) => {
+        const receivedData = [];
+        querySnapShot.forEach(doc => receivedData.push({
+          id: doc.id,
+          data: doc.data()
+        }));
 
-      setEvents(receivedData);
+        setEvents(receivedData);
+      });
     }
 
     handleFetchData()
