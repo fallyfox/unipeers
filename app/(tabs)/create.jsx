@@ -2,7 +2,9 @@ import { howToCreateEvent } from "@/assets/local-data/how-to-create-event";
 import { schools } from "@/assets/local-data/school-list";
 import { AuthContext } from "@/config/context.config";
 import { db } from "@/config/firebase.config";
+import { formatTimestampToDate } from "@/utils/format-date.utils";
 import { themeColors } from "@/utils/theme.utils";
+import DateTimePicker from "@react-native-community/datetimepicker";
 import { useRouter } from "expo-router";
 import { addDoc, collection } from "firebase/firestore";
 import { useContext, useEffect, useState } from "react";
@@ -32,7 +34,7 @@ export default function Create () {
                 desc: description,
                 venue: venue,
                 school: selectedSchool,
-                date: "",
+                date: new Date(`${date}`).getTime(),
                 createdBy: currentUser.uid,
                 createdAt: new Date().getTime(),
                 imgUrl: imageUrl,
@@ -53,7 +55,7 @@ export default function Create () {
             )
 
             // clear input data
-            setDate("");
+            setDate(new Date());
             setTitle("");
             setVenue("");
             setDescription("");
@@ -126,7 +128,7 @@ export default function Create () {
                         onChangeText={(text) => setImageUrl(text)}/>
                     </View>
 
-                    {/* <View>
+                    <View>
                         <TouchableOpacity 
                         onPress={() => setShowPicker(true)}
                         style={styles.picker}
@@ -141,7 +143,7 @@ export default function Create () {
                             value={date}
                             onChange={onChange}/>
                         )}
-                    </View> */}
+                    </View>
 
                     <View>
                         <Text className="text-md text-neutral-500">Event venue</Text>
@@ -167,7 +169,7 @@ export default function Create () {
                         description.length > 3 && 
                         imageUrl.length > 8 &&
                         currentUser
-                        ? handleCreateEvent : () => {}
+                        ? handleCreateEvent : null
                     }
                     style={styles.submitBtn}>
                         {loading === true
