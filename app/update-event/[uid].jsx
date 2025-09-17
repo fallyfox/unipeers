@@ -1,16 +1,11 @@
 import { howToCreateEvent } from "@/assets/local-data/how-to-create-event";
 import { schools } from "@/assets/local-data/school-list";
-import { db } from "@/config/firebase.config";
 import { themeColors } from "@/utils/theme.utils";
 import { addDoc, collection } from "firebase/firestore";
 import { useEffect, useState } from "react";
 import { ActivityIndicator, Alert, Platform, ScrollView, StatusBar, StyleSheet, Text, TextInput, TouchableOpacity, View } from "react-native";
 import RNPickerSelect from 'react-native-picker-select';
-
-// get id of event
-// perform getDoc
-// set doc data to useState
-// perform updateDoc
+import { db } from "../../config/firebase";
 
 export default function UpdateEvent () {
     const [title,setTitle] = useState("");

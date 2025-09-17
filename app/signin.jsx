@@ -1,8 +1,8 @@
 import { Link, useRouter } from "expo-router";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { useState } from "react";
-import { ActivityIndicator, Alert, Image, StatusBar, StyleSheet, Text, TextInput, TouchableOpacity, View } from "react-native";
-import { auth } from "../config/firebase.config";
+import { ActivityIndicator, Alert, Image, KeyboardAvoidingView, Platform, ScrollView, StatusBar, StyleSheet, Text, TextInput, TouchableOpacity, View } from "react-native";
+import { auth } from "../config/firebase";
 import { themeColors } from "../utils/theme.utils";
 
 export default function Signin () {
@@ -31,78 +31,92 @@ export default function Signin () {
     }
 
     return (
-        <View style={styles.wrapper}>
-            {/* <StatusBar translucent={false} barStyle="light-content"/> */}
-            {/* header group */}
-            <View style={styles.header}>
-                <Text style={styles.brandName}>Unipeers</Text>
-                <Text style={styles.brandDesc}>Where friends meets friends</Text>
-            </View>
+        <KeyboardAvoidingView
+            style={styles.wrapper}
+            behavior="padding"
+            keyboardVerticalOffset={Platform.select({
+                ios: 0,
+                android: -StatusBar.currentHeight,
+            })}>
+            <ScrollView
+                contentContainerStyle={styles.ScrollViewContainer}
+                showsVerticalScrollIndicator={false}>
+                <View style={styles.wrapper}>
+                    {/* <StatusBar translucent={false} barStyle="light-content"/> */}
+                    {/* header group */}
+                    <View style={styles.header}>
+                        <Text style={styles.brandName}>Unipeers</Text>
+                        <Text style={styles.brandDesc}>Where friends meets friends</Text>
+                    </View>
 
-            {/* body group */}
-            <View style={styles.body}>
-                <Text style={styles.bodyText}>Sign in to your account</Text>
+                    {/* body group */}
+                    <View style={styles.body}>
+                        <Text style={styles.bodyText}>Sign in to your account</Text>
 
-                {/* create account with google */}
-                <TouchableOpacity style={styles.signInBtn}>
-                    <Image
-                    style={{
-                        width: 36,
-                        height: 36,
-                    }}
-                    source={require("../assets/images/google.png")}/>
-                    <Text style={styles.signInText}>Google</Text>
-                </TouchableOpacity>
+                        {/* create account with google */}
+                        <TouchableOpacity style={styles.signInBtn}>
+                            <Image
+                            style={{
+                                width: 36,
+                                height: 36,
+                            }}
+                            source={require("../assets/images/google.png")}/>
+                            <Text style={styles.signInText}>Google</Text>
+                        </TouchableOpacity>
 
-                {/* OR */}
-                <View style={styles.orSec}>
-                    <View style={styles.line}></View>
-                    <Text style={styles.orText}>OR</Text>
-                    <View style={styles.line}></View>
+                        {/* OR */}
+                        <View style={styles.orSec}>
+                            <View style={styles.line}></View>
+                            <Text style={styles.orText}>OR</Text>
+                            <View style={styles.line}></View>
+                        </View>
+
+                        {/* create account with email and password */}
+                        <View style={styles.emailSec}>
+                            <TextInput
+                            autoCapitalize="none"
+                            keyboardType="email-address"
+                            style={styles.input}
+                            placeholder="eg. johndoe@example.com"
+                            value={email}
+                            onChangeText={(text) => setEmail(text)}/>
+                            
+                            <TextInput
+                            secureTextEntry={true}
+                            autoCapitalize="none"
+                            keyboardType="default"
+                            style={styles.input}
+                            placeholder="create password"
+                            value={password}
+                            onChangeText={(text) => setPassword(text)}/>
+                            
+                            <TouchableOpacity onPress={handleSignIn} style={styles.signInBtn}>
+                                {isLoading ? <ActivityIndicator size="large" color="white"/> :
+                                <Text style={styles.signInText}>Sign in</Text>}
+                            </TouchableOpacity>
+                        </View>
+
+                        {/* already have an account? */}
+                        <View style={styles.already}>
+                            <Text style={styles.alreadyText}>Don't have an account?</Text>
+                            <Link href="/signup" style={styles.alreadyLink}>
+                                <Text>Go to sign up</Text>
+                            </Link>
+                        </View>
+                    </View>
+
+                    {/* bottom group */}
+                    <View style={styles.footer}>
+                        <Link href="/about" style={styles.footerLink}>
+                            <Text>About Unipeers</Text>
+                        </Link>
+                        <Link href="/about" style={styles.footerLink}>
+                            <Text>Home</Text>
+                        </Link>
+                    </View>
                 </View>
-
-                {/* create account with email and password */}
-                <View style={styles.emailSec}>
-                    <TextInput
-                    keyboardType="email-address"
-                    style={styles.input}
-                    placeholder="eg. johndoe@example.com"
-                    value={email}
-                    onChangeText={(text) => setEmail(text)}/>
-                    
-                    <TextInput
-                    secureTextEntry={true}
-                    keyboardType="default"
-                    style={styles.input}
-                    placeholder="create password"
-                    value={password}
-                    onChangeText={(text) => setPassword(text)}/>
-                    
-                    <TouchableOpacity onPress={handleSignIn} style={styles.signInBtn}>
-                        {isLoading ? <ActivityIndicator size="large" color="white"/> :
-                        <Text style={styles.signInText}>Sign in</Text>}
-                    </TouchableOpacity>
-                </View>
-
-                {/* already have an account? */}
-                <View style={styles.already}>
-                    <Text style={styles.alreadyText}>Don't have an account?</Text>
-                    <Link href="/signup" style={styles.alreadyLink}>
-                        <Text>Go to sign up</Text>
-                    </Link>
-                </View>
-            </View>
-
-            {/* bottom group */}
-            <View style={styles.footer}>
-                <Link href="/about" style={styles.footerLink}>
-                    <Text>About Unipeers</Text>
-                </Link>
-                <Link href="/about" style={styles.footerLink}>
-                    <Text>Home</Text>
-                </Link>
-            </View>
-        </View>
+            </ScrollView>
+        </KeyboardAvoidingView>
     )
 }
 
@@ -115,6 +129,11 @@ const styles = StyleSheet.create({
     paddingTop: StatusBar.currentHeight,
     paddingBottom: 40
    }, 
+   ScrollViewContainer: {
+        flexGrow: 1,
+        justifyContent: "space-between",
+        marginBottom: 40,
+    },
    header: {
     display: "flex",
     flexDirection: "column",

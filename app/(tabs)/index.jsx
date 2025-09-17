@@ -1,11 +1,11 @@
 import { EventSnippet } from "@/components/EventSnippet";
 import { Seperator } from "@/components/ListSeperator";
-import { db } from "@/config/firebase.config";
 import { themeColors } from "@/utils/theme.utils";
 import { collection, onSnapshot, orderBy, query } from "firebase/firestore";
 import { useEffect, useState } from "react";
 import { ActivityIndicator, FlatList, StyleSheet } from "react-native";
 import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
+import { db } from "../../config/firebase";
 
 export default function Index () {
   const [events,setEvents] = useState([]);
@@ -38,7 +38,7 @@ export default function Index () {
           ItemSeparatorComponent={() => (<Seperator h={32} w={0}/>)}
           renderItem={({item}) => {
             return (
-              <EventSnippet data={item.data}/>
+              <EventSnippet id={item.id} data={item.data}/>
             )
           }}
           keyExtractor={(item) => item.id}

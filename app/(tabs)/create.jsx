@@ -1,7 +1,5 @@
 import { howToCreateEvent } from "@/assets/local-data/how-to-create-event";
 import { schools } from "@/assets/local-data/school-list";
-import { AuthContext } from "@/config/context.config";
-import { db } from "@/config/firebase.config";
 import { formatTimestampToDate } from "@/utils/format-date.utils";
 import { themeColors } from "@/utils/theme.utils";
 import DateTimePicker from "@react-native-community/datetimepicker";
@@ -10,6 +8,8 @@ import { addDoc, collection } from "firebase/firestore";
 import { useContext, useEffect, useState } from "react";
 import { ActivityIndicator, Alert, Platform, ScrollView, StatusBar, StyleSheet, Text, TextInput, TouchableOpacity, View } from "react-native";
 import RNPickerSelect from 'react-native-picker-select';
+import { AuthContext } from "../../config/context";
+import { db } from "../../config/firebase";
 
 export default function Create () {
     const { currentUser } = useContext(AuthContext);

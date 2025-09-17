@@ -14,5 +14,5 @@
     ".expo/types/**/*.ts",
     "expo-env.d.ts",
     "nativewind-env.d.ts"
-, "app/(tabs)/create.jsx", "utils/format-date.utils.js", "app/index.jsx", "app/about.jsx", "app/_layout.jsx", "app/(tabs)/saved.jsx", "app/(tabs)/profile.jsx", "app/(tabs)/index.jsx", "app/(tabs)/_layout.jsx"  ]
+, "app/(buyer)/create.jsx", "utils/format-date.utils.js", "app/index.jsx", "app/about.jsx", "app/_layout.jsx", "app/(buyer)/saved.jsx", "app/(buyer)/profile.jsx", "app/(buyer)/index.jsx", "app/(buyer)/_layout.jsx", "config/firebase.config.js"  ]
 }

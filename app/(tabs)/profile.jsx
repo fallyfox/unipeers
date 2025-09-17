@@ -1,7 +1,5 @@
 import { Seperator } from "@/components/ListSeperator";
 import { UserEventSnippet } from "@/components/UserEventSnippet";
-import { AuthContext } from "@/config/context.config";
-import { auth, db } from "@/config/firebase.config";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import { Link, useRouter } from "expo-router";
@@ -10,6 +8,8 @@ import { collection, onSnapshot, query, where } from "firebase/firestore";
 import { useContext, useEffect, useState } from "react";
 import { ActivityIndicator, Alert, Dimensions, FlatList, Image, Pressable, Text, View } from "react-native";
 import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
+import { AuthContext } from "../../config/context";
+import { auth, db } from "../../config/firebase";
 
 // 24 is used for padding, 16 for gap, 4 is meant for unaccounted spaces
 const screenWidth = Dimensions.get("window").width - 24 - 16 - 4; 
@@ -18,6 +18,7 @@ export default function Profile () {
   const { currentUser } = useContext(AuthContext);
   const [userEvents,setUserEvents] = useState([]);
   const [isLoading,setIsLoading] = useState(false);
+  const [modalVisible, setModalVisible] = useState(false);
 
   const router = useRouter();
 
@@ -47,7 +48,7 @@ export default function Profile () {
 
       const q = query(
         collection(db,"events"),
-        where("createdBy","==",currentUser.uid)
+        where("createdBy","==",currentUser?.uid)
       );
 
       onSnapshot(q, (onSnap) => {

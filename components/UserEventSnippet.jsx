@@ -1,10 +1,10 @@
-import { db } from "@/config/firebase.config";
 import { themeColors } from "@/utils/theme.utils";
 import Feather from "@expo/vector-icons/Feather";
 import { Link } from "expo-router";
 import { deleteDoc, doc } from "firebase/firestore";
 import { useEffect, useState } from "react";
 import { ActivityIndicator, Alert, Image, StyleSheet, TouchableOpacity, View } from "react-native";
+import { db } from "../config/firebase";
 
 export function UserEventSnippet ({ eventData,boxWidth }) {
     const [isLoading,setIsLoading] = useState(false);
